@@ -1,3 +1,5 @@
+using LibrarySystem.DataAccess.Interfaces;
+using LibrarySystem.DataAccess.Repositories;
 using LibrarySystemAPI.DataAccess.Context;
 using LibrarySystemAPI.DataAccess.Models.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -17,15 +19,15 @@ builder.Services.AddEndpointsApiExplorer();
 #region IdentityConfig
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-options.SignIn.RequireConfirmedAccount = true;
-options.User.RequireUniqueEmail = false;
-options.Password.RequireDigit = false;
-options.Password.RequireLowercase = false;
-options.Password.RequireNonAlphanumeric = false;
-options.Password.RequireUppercase = false;
-options.Password.RequiredLength = 6;
+    options.SignIn.RequireConfirmedAccount = true;
+    options.User.RequireUniqueEmail = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
 }).AddEntityFrameworkStores<LibrarySystemDbContext>()
-.AddDefaultTokenProviders(); 
+.AddDefaultTokenProviders();
 #endregion
 
 
@@ -35,7 +37,9 @@ builder.Services.AddDbContext<LibrarySystemDbContext>(options =>
 
 
 
-
+#region DI
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#endregion
 
 
 var app = builder.Build();
