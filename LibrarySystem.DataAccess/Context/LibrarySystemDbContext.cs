@@ -1,5 +1,6 @@
 ﻿using LibrarySystemAPI.DataAccess.Models.Auth;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace LibrarySystemAPI.DataAccess.Context
 {
@@ -9,5 +10,16 @@ namespace LibrarySystemAPI.DataAccess.Context
              ApplicationRoleClaim, ApplicationUserToken>(options)
     {
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+
+
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
+   
 }
