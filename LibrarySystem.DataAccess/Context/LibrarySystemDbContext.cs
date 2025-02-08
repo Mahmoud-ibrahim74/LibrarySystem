@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 namespace LibrarySystemAPI.DataAccess.Context
 {
     public class LibrarySystemDbContext(DbContextOptions<LibrarySystemDbContext> options) :
-    IdentityDbContext<ApplicationUser, ApplicationRole, string,
+    IdentityDbContext<ApplicationUser, ApplicationRole, int,
              ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
              ApplicationRoleClaim, ApplicationUserToken>(options)
     {

@@ -1,5 +1,5 @@
 ﻿namespace LibrarySystemAPI.DataAccess.Models.Auth;
 
-public class ApplicationUserRole : IdentityUserRole<string>
+public class ApplicationUserRole : IdentityUserRole<int>
 {
 }

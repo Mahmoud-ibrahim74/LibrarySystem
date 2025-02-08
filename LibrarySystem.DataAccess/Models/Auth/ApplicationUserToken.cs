@@ -1,6 +1,6 @@
 ﻿namespace LibrarySystemAPI.DataAccess.Models.Auth
 {
-    public class ApplicationUserToken : IdentityUserToken<string>
+    public class ApplicationUserToken : IdentityUserToken<int>
     {
 
     }
