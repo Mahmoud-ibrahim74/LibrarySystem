@@ -6,5 +6,6 @@ namespace LibrarySystem.DataAccess.Repositories.Auth
 {
     public class UserClaimRepository(LibrarySystemDbContext context) : BaseRepository<ApplicationUserClaim>(context), IUserClaimRepository
     {
+
     }
 }

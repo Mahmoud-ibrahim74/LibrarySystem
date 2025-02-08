@@ -5,6 +5,7 @@ public static class SD
     public static class Modules
     {
         public const string Auth = "Auth";
+        public const string Book = "Book";
         public const string V1 = "v1";
         public const string Bearer = "Bearer";
 
@@ -62,6 +63,17 @@ public static class SD
         {
             public const string AddUserRole = "UserRoles/Add";
             public const string DeleteUserRole = "UserRoles/Delete";
+        }
+
+
+        public static class Books
+        {
+            public const string GetAllBook = "Book/GetAll";
+            public const string GetBookById = "Book/{id}";
+            public const string AddBook = "Book/Add";
+            public const string UpdateBook = "Book/update/{id}";
+            public const string DeleteBook = "Book/Delete/{id}";
+
         }
     }
 

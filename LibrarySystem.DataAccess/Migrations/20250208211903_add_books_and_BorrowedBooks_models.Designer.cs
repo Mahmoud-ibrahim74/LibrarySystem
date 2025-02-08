@@ -4,6 +4,7 @@ using LibrarySystemAPI.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibrarySystem.DataAccess.Migrations
 {
     [DbContext(typeof(LibrarySystemDbContext))]
-    partial class LibrarySystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250208211903_add_books_and_BorrowedBooks_models")]
+    partial class add_books_and_BorrowedBooks_models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace LibrarySystem.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Book", (string)null);
+                    b.ToTable("table");
                 });
 
             modelBuilder.Entity("LibrarySystem.DataAccess.Models.Books.BorrowedBook", b =>
@@ -82,7 +85,7 @@ namespace LibrarySystem.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Borrowed_Book", (string)null);
+                    b.ToTable("Borrowed_Book");
                 });
 
             modelBuilder.Entity("LibrarySystemAPI.DataAccess.Models.Auth.ApplicationRole", b =>

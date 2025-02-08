@@ -2,7 +2,9 @@ using LibrarySystem.DataAccess.Interfaces;
 using LibrarySystem.DataAccess.Repositories;
 using LibrarySystem.Domain.Options;
 using LibrarySystem.Services.IServices;
+using LibrarySystem.Services.IServices.Books;
 using LibrarySystem.Services.Services;
+using LibrarySystem.Services.Services.Books;
 using LibrarySystemAPI.DataAccess.Context;
 using LibrarySystemAPI.DataAccess.Models.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +42,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 builder.Services.AddDbContext<LibrarySystemDbContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString(Shared.LibrarySystemConnection),
-     b => b.MigrationsAssembly(typeof(LibrarySystemDbContext).Assembly.FullName)));
+     b => b.MigrationsAssembly(typeof(LibrarySystemDbContext).Assembly.FullName)).UseLazyLoadingProxies());
 
 
 
@@ -104,6 +106,11 @@ builder.Services.AddSwaggerGen(x =>
         Title = $"{Shared.LibrarySystem} {Modules.Auth}",
         Version = Modules.V1
     });
+    x.SwaggerDoc(Modules.Book, new OpenApiInfo
+    {
+        Title = $"{Shared.LibrarySystem} {Modules.Book}",
+        Version = Modules.V1
+    });
     x.AddSecurityDefinition(Modules.Bearer, new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -139,6 +146,7 @@ builder.Services.AddSwaggerGen(x =>
 #region DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IBookService, BookService>();
 #endregion
 
 
@@ -153,6 +161,7 @@ app.UseSwagger();
 app.UseSwaggerUI(x =>
 {
     x.SwaggerEndpoint($"/swagger/{Modules.Auth}/swagger.json", "Auth_Management v1");
+    x.SwaggerEndpoint($"/swagger/{Modules.Book}/swagger.json", "Book v1");
 });
 app.UseHttpsRedirection();
 
