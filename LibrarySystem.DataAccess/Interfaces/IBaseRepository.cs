@@ -13,7 +13,13 @@ namespace LibrarySystem.DataAccess.Interfaces
          int? take = null);
 
 
-
+        Task<IEnumerable<TType>> GetSpecificSelectAsync<TType>(
+                    Expression<Func<T, bool>> filter,
+                    Expression<Func<T, TType>> select,
+                    string includeProperties = null!,
+                    int? skip = null,
+                    int? take = null,
+                    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null!) where TType : class;
         public Task<bool> ExistAsync(int id);
 
         public Task<bool> ExistAsync(Expression<Func<T, bool>> filter = null!, string includeProperties = null!

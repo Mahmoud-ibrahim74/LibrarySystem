@@ -104,6 +104,16 @@ builder.Services.AddSwaggerGen(x =>
         Title = $"{Shared.LibrarySystem} {Modules.Auth}",
         Version = Modules.V1
     });
+    x.AddSecurityDefinition(Modules.Bearer, new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field Like => Bearer yourToken....",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = Modules.Bearer,
+        BearerFormat = "Bearer",
+
+    });
 });
 
 
@@ -130,8 +140,8 @@ app.UseSwaggerUI(x =>
 });
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

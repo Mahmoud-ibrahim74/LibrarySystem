@@ -44,12 +44,24 @@ public static class SD
     {
         public static class Users
         {
-            public const string GetAllUsers = "Users/getAll";
+            public const string GetAllUsers = "Users/GetAll";
             public const string LoginUser = "Users/Login";
             public const string GetUserById = "Users/{id}";
             public const string AddUser = "Users/Add";
-            public const string DeleteUser = "Users/{id}";
+            public const string DeleteUser = "Users/Delete/{id}";
 
+        }
+        public static class Roles
+        {
+            public const string GetAllRoles = "Roles/GetAll";
+            public const string AddRole = "Roles/Add";
+            public const string UpdateRole = "Roles/Update/{id}";
+            public const string DeleteRole = "Roles/Delete/{id}";
+        }
+        public static class UserRoles
+        {
+            public const string AddUserRole = "UserRoles/Add";
+            public const string DeleteUserRole = "UserRoles/Delete";
         }
     }
 

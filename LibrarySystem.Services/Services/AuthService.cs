@@ -31,6 +31,7 @@ public class AuthService(IUnitOfWork unitOfWork,
 
     #region Authentication
 
+    #region Users
     public async Task<Response<AuthLoginUserResponse>> LoginUserAsync(AuthLoginUserRequest model)
     {
         var normalizedUserName = _userManager.NormalizeName(model.UserName);
@@ -46,7 +47,7 @@ public class AuthService(IUnitOfWork unitOfWork,
                 {
                     UserName = model.UserName
                 },
-                Msg = "password doesn't match",
+                Msg = "user name or password incorrect",
                 Check = false
             };
 
@@ -196,7 +197,7 @@ public class AuthService(IUnitOfWork unitOfWork,
             Check = true
         };
     }
-    public async Task<Response<string>> DeleteUser(string id)
+    public async Task<Response<string>> DeleteUser(int id)
     {
         var obj = await _userManager.FindByIdAsync(id.ToString());
 
@@ -217,5 +218,168 @@ public class AuthService(IUnitOfWork unitOfWork,
             Msg = "deleted sucessfully"
         };
     }
+    #endregion
+
+    #region Roles
+    public async Task<Response<string>> CreateRole(string roleName)
+    {
+        var isExist = await _roleManager.RoleExistsAsync(roleName.ToLower());
+        if (isExist)
+            return new()
+            {
+                Check = false,
+                Msg = "Role is exist"
+            };
+
+        var role = new ApplicationRole()
+        {
+            Name = roleName
+        };
+        var res = await _roleManager.CreateAsync(role);
+        if (res.Succeeded)
+            return new()
+            {
+                Msg = "Role Added Succesfully",
+                Check = true,
+            };
+        return new()
+        {
+            Error = res.Errors.Select(x => x.Description).First(),
+        };
+    }
+    public async Task<Response<IEnumerable<object>>> GetAllRolesAsync()
+    {
+        var result =
+                await _unitOfWork.Roles.GetSpecificSelectAsync(null!,
+                select: x => new
+                {
+                     x.Id,
+                     x.Name
+                }, orderBy: x =>
+                  x.OrderByDescending(x => x.Id));
+
+        if (!result.Any())
+        {
+            return new()
+            {
+                Data = [],
+                Msg = "No Roles are found"
+            };
+        }
+        return new()
+        {
+            Data = result,
+            Check = true
+        };
+    }
+    public async Task<Response<object>> UpdateRole(int id,UpdateRole model)
+    {
+        var role = await _roleManager.FindByIdAsync(id.ToString());
+        if (role is null)
+            return new()
+            {
+                Check = false,
+                Msg = "Role doesn't exist"
+            };
+        role.Name = model.name;
+        var res = await _roleManager.UpdateAsync(role);
+        if (res.Succeeded)
+            return new()
+            {
+                Msg = "Role updated Succesfully",
+                Check = true,
+            };
+        return new()
+        {
+            Error = res.Errors.Select(x => x.Description).First(),
+        };
+    }
+    public async Task<Response<string>> DeleteRole(int id)
+    {
+        var role = await _roleManager.FindByIdAsync(id.ToString());
+        if (role is null)
+            return new()
+            {
+                Check = false,
+                Msg = "Role doesn't exist"
+            };
+        var res = await _roleManager.DeleteAsync(role);
+        if (res.Succeeded)
+            return new()
+            {
+                Msg = "Role deleted Succesfully",
+                Check = true,
+            };
+        return new()
+        {
+            Error = res.Errors.Select(x => x.Description).First(),
+        };
+    }
+    #endregion
+
+    #region UsersRoles
+    public async Task<Response<string>> CreateUserRole(CreateUserRoleRequest model)
+    {
+        var role = await _roleManager.FindByIdAsync(model.RoleId.ToString());
+        if (role is null)
+            return new()
+            {
+                Check = false,
+                Msg = "Role doesn't exist"
+            };
+        var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+        if (user is null)
+            return new()
+            {
+                Check = false,
+                Msg = "user doesn't exist"
+            };
+
+        var res = await _userManager.AddToRoleAsync(user, role?.Name);
+        if (res.Succeeded)
+            return new()
+            {
+                Msg = "UserRole Added Succesfully",
+                Check = true,
+            };
+        return new()
+        {
+            Error = res.Errors.Select(x => x.Description).First(),
+        };
+
+
+    }
+    public async Task<Response<string>> DeleteUserRole(CreateUserRoleRequest model)
+    {
+        var role = await _roleManager.FindByIdAsync(model.RoleId.ToString());
+        if (role is null)
+            return new()
+            {
+                Check = false,
+                Msg = "Role doesn't exist"
+            };
+        var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+        if (user is null)
+            return new()
+            {
+                Check = false,
+                Msg = "user doesn't exist"
+            };
+
+        var res = await _userManager.RemoveFromRoleAsync(user, role?.Name);
+        if (res.Succeeded)
+            return new()
+            {
+                Msg = "UserRole deleted Succesfully",
+                Check = true,
+            };
+        return new()
+        {
+            Error = res.Errors.Select(x => x.Description).First(),
+        };
+    }
+    #endregion
+
+
     #endregion
 }
