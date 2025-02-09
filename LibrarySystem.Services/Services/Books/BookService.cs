@@ -53,69 +53,46 @@ namespace LibrarySystem.Services.Services.Books
 
         public async Task<Response<GetAllResponse>> GetAllBooks(GetAllBooksFilteration model)
         {
-            var bookObjCached = cacheProviderService.GetValueFromCache<object>(SD.Shared.BookCacheKey);
-            var bookObjCountCached = cacheProviderService.GetValueFromCache<int>(SD.Shared.BookCountCacheKey);
-            if (bookObjCached is null)
+            Expression<Func<Book, bool>> filter = x =>
+                                       (string.IsNullOrEmpty(model.Word) ||
+                                          x.Author.Contains(model.Word)
+                                          || x.Title.Contains(model.Word)
+                                       );
+            var result = await _unitOfWork.Books.GetSpecificSelectAsync(
+                                     filter: filter,
+                                     take: model.PageSize,
+                                     skip: (model.PageNumber - 1) * model.PageSize,
+                                     select: x => new
+                                     {
+                                         x.Id,
+                                         x.Title,
+                                         x.Author,
+                                         x.Genre,
+                                         x.PublishedYear,
+                                         x.IsAvailable
+                                     }, orderBy: x => x.OrderBy(x => x.Id));
+            var totalRecord = await _unitOfWork.Books.CountAsync(filter);
+            var response = new GetAllResponse()
             {
+                CurrentPage = model.PageNumber,
+                Items = result,
+                page = model.PageNumber,
+                PageNumber = model.PageNumber,
+                PageSize = model.PageSize,
+                TotalRecords = totalRecord
+            };
 
-                Expression<Func<Book, bool>> filter = x =>
-                                           (string.IsNullOrEmpty(model.Word) ||
-                                              x.Author.Contains(model.Word)
-                                              || x.Title.Contains(model.Word)
-                                           );
-                var result = await _unitOfWork.Books.GetSpecificSelectAsync(
-                                         filter: filter,
-                                         take: model.PageSize,
-                                         skip: (model.PageNumber - 1) * model.PageSize,
-                                         select: x => new
-                                         {
-                                             x.Id,
-                                             x.Title,
-                                             x.Author,
-                                             x.Genre,
-                                             x.PublishedYear,
-                                             x.IsAvailable
-                                         }, orderBy: x => x.OrderBy(x => x.Id));
-                var totalRecord = await _unitOfWork.Books.CountAsync(filter);
-                var response = new GetAllResponse()
-                {
-                    CurrentPage = model.PageNumber,
-                    Items = result,
-                    page = model.PageNumber,
-                    PageNumber = model.PageNumber,
-                    PageSize = model.PageSize,
-                    TotalRecords = totalRecord
-                };
-
-                #region SavObjTOCache
-                cacheProviderService.SaveValueToCache<object>(SD.Shared.BookCacheKey, result, TimeSpan.FromMinutes(2));
-                cacheProviderService.SaveValueToCache<int>(SD.Shared.BookCountCacheKey, totalRecord, TimeSpan.FromMinutes(2)); 
-                #endregion
+            #region SavObjTOCache
+            cacheProviderService.SaveValueToCache<object>(SD.Shared.BookCacheKey, result, TimeSpan.FromMinutes(2));
+            cacheProviderService.SaveValueToCache<int>(SD.Shared.BookCountCacheKey, totalRecord, TimeSpan.FromMinutes(2));
+            #endregion
 
 
-                return new()
-                {
-                    Check = true,
-                    Data = response
-                };
-            }
-            else
+            return new()
             {
-                var response = new GetAllResponse()
-                {
-                    CurrentPage = model.PageNumber,
-                    Items = bookObjCached,
-                    page = model.PageNumber,
-                    PageNumber = model.PageNumber,
-                    PageSize = model.PageSize,
-                    TotalRecords = bookObjCountCached
-                };
-                return new()
-                {
-                    Check = true,
-                    Data = response
-                };
-            }
+                Check = true,
+                Data = response
+            };
         }
 
         public async Task<Response<GetBookByIdResponse>> GetBookById(int id)
