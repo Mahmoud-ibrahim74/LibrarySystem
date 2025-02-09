@@ -26,7 +26,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddMemoryCache();  
 #region IdentityConfig
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
@@ -151,6 +151,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBorrowedBookService, BorrowedBookService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddSingleton<ICacheProviderService, CacheProviderService>();
 #endregion
 
 

@@ -7,10 +7,10 @@ namespace LibrarySystem.Services.Services.AppServices
     {
         private readonly IMemoryCache _cache = cache;
 
-        public string GetValueFromCache(string cacheKey)
+        public T? GetValueFromCache<T>(string cacheKey)
         {
-            _cache.TryGetValue(cacheKey, out string code);
-            return code ?? string.Empty;
+            _cache.TryGetValue(cacheKey, out T value);
+            return value;
         }
 
         public void RemoveValueFromCache(string cacheKey)
@@ -18,9 +18,8 @@ namespace LibrarySystem.Services.Services.AppServices
             _cache.Remove(cacheKey);
         }
 
-        public void SaveValueToCache(string cacheKey, string cacheValue, TimeSpan expirationTime)
+        public void SaveValueToCache<T>(string cacheKey, T cacheValue, TimeSpan expirationTime)
         {
-
             _cache.Set(cacheKey, cacheValue, expirationTime);
         }
     }

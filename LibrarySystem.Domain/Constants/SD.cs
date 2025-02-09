@@ -40,6 +40,8 @@ public static class SD
         public const string Production = "Production";
         public const string Productions = "Productions";
         public const string Resources = "Resources";
+        public const string BookCacheKey = "AllBooks";
+        public const string BookCountCacheKey = "AllBooksCount";
     }
     public static class ApiRoutes
     {
