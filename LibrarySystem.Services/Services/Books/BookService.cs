@@ -20,7 +20,7 @@ namespace LibrarySystem.Services.Services.Books
                 PublishedYear = model.PublishedYear,
                 IsAvailable = true,
             };
-            await _unitOfWork.BookRepository.AddAsync(book);
+            await _unitOfWork.Books.AddAsync(book);
             await _unitOfWork.CompleteAsync();
             return new()
             {
@@ -31,7 +31,7 @@ namespace LibrarySystem.Services.Services.Books
 
         public async Task<Response<string>> DeleteBook(int id)
         {
-            var obj = await _unitOfWork.BookRepository.GetByIdAsync(id);
+            var obj = await _unitOfWork.Books.GetByIdAsync(id);
             if (obj is null)
                 return new()
                 {
@@ -40,7 +40,7 @@ namespace LibrarySystem.Services.Services.Books
                 };
 
 
-            _unitOfWork.BookRepository.Remove(obj);
+            _unitOfWork.Books.Remove(obj);
             await _unitOfWork.CompleteAsync();
             return new()
             {
@@ -59,7 +59,7 @@ namespace LibrarySystem.Services.Services.Books
 
 
 
-            var result = await _unitOfWork.BookRepository.GetSpecificSelectAsync(
+            var result = await _unitOfWork.Books.GetSpecificSelectAsync(
                                      filter: filter,
                                      take: model.PageSize,
                                      skip: (model.PageNumber - 1) * model.PageSize,
@@ -81,7 +81,7 @@ namespace LibrarySystem.Services.Services.Books
                 page = model.PageNumber,
                 PageNumber = model.PageNumber,
                 PageSize = model.PageSize,
-                TotalRecords = await _unitOfWork.BookRepository.CountAsync(filter)
+                TotalRecords = await _unitOfWork.Books.CountAsync(filter)
             };
             return new()
             {
@@ -93,7 +93,7 @@ namespace LibrarySystem.Services.Services.Books
 
         public async Task<Response<GetBookByIdResponse>> GetBookById(int id)
         {
-            var obj = await _unitOfWork.BookRepository.GetByIdAsync(id);
+            var obj = await _unitOfWork.Books.GetByIdAsync(id);
             if (obj is null)
             {
                 return new()
@@ -121,7 +121,7 @@ namespace LibrarySystem.Services.Services.Books
 
         public async Task<Response<string>> UpdateBook(int id, CreateUpdateBookRequest model)
         {
-            var obj = await _unitOfWork.BookRepository.GetByIdAsync(id);
+            var obj = await _unitOfWork.Books.GetByIdAsync(id);
             if (obj is null)
                 return new()
                 {
@@ -134,7 +134,7 @@ namespace LibrarySystem.Services.Services.Books
             obj.Author = model.Author;
             obj.Genre = model.Genre;
             obj.PublishedYear = model.PublishedYear;
-            _unitOfWork.BookRepository.Update(obj);
+            _unitOfWork.Books.Update(obj);
             await _unitOfWork.CompleteAsync();
             return new()
             {

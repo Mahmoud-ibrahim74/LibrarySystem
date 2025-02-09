@@ -10,6 +10,7 @@ public interface IUnitOfWork : IDisposable
     public IUserClaimRepository UserClaims { get; }
     public IRoleRepository Roles { get; }
     public IUserRoleRepository UserRoles { get; }
-    public IBookRepository BookRepository { get; }
+    public IBookRepository Books { get; }
+    public IBorrowedBookRepository  BorrowedBooks { get; }
     public Task<int> CompleteAsync();
 }

@@ -4,6 +4,6 @@ using LibrarySystemAPI.DataAccess.Context;
 
 namespace LibrarySystem.DataAccess.Repositories.Books;
 
-public class BookRepository(LibrarySystemDbContext context) : BaseRepository<Book>(context), IBookRepository
+public class BorrowedBookRepository(LibrarySystemDbContext context) : BaseRepository<BorrowedBook>(context), IBorrowedBookRepository
 {
 }

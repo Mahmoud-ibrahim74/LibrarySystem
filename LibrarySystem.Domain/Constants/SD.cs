@@ -75,6 +75,12 @@ public static class SD
             public const string DeleteBook = "Book/Delete/{id}";
 
         }
+        public static class BorrowedBook
+        {
+            public const string GetAllBorrowedBook = "borrow";
+            public const string AddBorrowedBook = "borrow/Add/{bookId}";
+            public const string ReturnBorrowedBook = "borrow/Return/{id}";
+        }
     }
 
 }

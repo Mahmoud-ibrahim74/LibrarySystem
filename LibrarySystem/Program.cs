@@ -2,8 +2,10 @@ using LibrarySystem.DataAccess.Interfaces;
 using LibrarySystem.DataAccess.Repositories;
 using LibrarySystem.Domain.Options;
 using LibrarySystem.Services.IServices;
+using LibrarySystem.Services.IServices.AppServices;
 using LibrarySystem.Services.IServices.Books;
 using LibrarySystem.Services.Services;
+using LibrarySystem.Services.Services.AppServices;
 using LibrarySystem.Services.Services.Books;
 using LibrarySystemAPI.DataAccess.Context;
 using LibrarySystemAPI.DataAccess.Models.Auth;
@@ -147,6 +149,8 @@ builder.Services.AddSwaggerGen(x =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBorrowedBookService, BorrowedBookService>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 #endregion
 
 
